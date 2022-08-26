@@ -54,7 +54,7 @@ All files and can be found in the root folder of the [project-ml-microservice-ku
 - **requirements.txt** - This text file has a list of package dependencies for `app.py`
 - **Makefile** - This file contains instructions to setup, install, test and lint the program in a virtual environment
 - **run_docker.sh** - This script file creates a docker image. It contains instructions on the image name, tag etc.
-  - `docker build .` command builds the docker image using the Dockerfile. This process involves copying source code into a working directory, installing dependencies listed in requirements.txt file and exposing port 80 where the app is running.
+  - `docker build --tag=mabi/udacity-docker-devops .` command builds the docker image with the tag `mabi/udacity-docker-devops` using the Dockerfile. This process involves copying source code into a working directory, installing dependencies listed in requirements.txt file and exposing port 80 where the app is running.
   - `docker run -p 8000:80 ` command runs the docker image and  exposes the app at port 8000. The script will build docker image using `--tag=mabi/udacity-docker-devops`.
   - `docker image ls` lists the built images
 - **upload_docker.sh** - This script uploads docker image to [Dockerhub](https://hub.docker.com/) after authenticating your Dockerhub credentials.
