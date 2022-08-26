@@ -1,50 +1,66 @@
 [![mabichuks](https://circleci.com/gh/mabichuks/project-ml-microservice-kubernetes.svg?style=svg)](https://circleci.com/gh/mabichuks/project-ml-microservice-kubernetes)
 
-## Project Overview
+# Operationalize a Machine Learning Microservice API
 
-In this project, you will apply the skills you have acquired in this course to operationalize a Machine Learning Microservice API. 
+## Overview
 
-You are given a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. You can read more about the data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing). This project tests your ability to operationalize a Python flask app—in a provided file, `app.py`—that serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
+This is a repository for 4th and final project of the **Udacity Cloud DevOps Engineer Nanodegree Program**.
 
-### Project Tasks
+The aim of this project is to operationalize a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on using [docker](https://docker.com), an open source platform for building, deploying and managing containers, as well as [kubernetes](https://kubernetes.io/), an open-source system for automating the management of containerized applications.
 
-Your project goal is to operationalize this working, machine learning microservice using [kubernetes](https://kubernetes.io/), which is an open-source system for automating the management of containerized applications. In this project you will:
-* Test your project code using linting
-* Complete a Dockerfile to containerize this application
-* Deploy your containerized application using Docker and make a prediction
-* Improve the log statements in the source code for this application
-* Configure Kubernetes and create a Kubernetes cluster
-* Deploy a container using Kubernetes and make a prediction
-* Upload a complete Github repo with CircleCI to indicate that your code has been tested
+## Instructions
 
-You can find a detailed [project rubric, here](https://review.udacity.com/#!/rubrics/2576/view).
+- Create a local environment using the following commands:
 
-**The final implementation of the project will showcase your abilities to operationalize production microservices.**
+  ```
+  	python3 -m venv ~/.devops
+  	source ~/.devops/bin/activate
+  ```
+- A local environment can also be created using the `Makefile` by running the following command:
+    ```
+        make setup
+    ```
 
----
+  At this point your command line should be similar to this:
+  `(.devops) <User>:project-ml-microservice-kubernetes<user>$`. The `(.devops)` indicates that your environment has been activated, and you can proceed with further package installations.
 
-## Setup the Environment
+- Install project dependencies using `Makefile`. The dependencies to be installed are listed in the `requirements.txt` file; these can be installed using `pip` commands in the provided `Makefile`. While in your virtual environment, type the following command to install these dependencies.
 
-* Create a virtualenv with Python 3.7 and activate it. Refer to this link for help on specifying the Python version in the virtualenv. 
-```bash
-python3 -m pip install --user virtualenv
-# You should have Python 3.7 available in your host. 
-# Check the Python path using `which python3`
-# Use a command similar to this one:
-python3 -m virtualenv --python=<path-to-Python3.7> .devops
-source .devops/bin/activate
-```
-* Run `make install` to install the necessary dependencies
+  ```
+  make install
+  ```
 
-### Running `app.py`
+- Lint python files and docker files using the command:
+  ```
+    make lint
+  ```
+- Run webapp image using
 
-1. Standalone:  `python app.py`
-2. Run in Docker:  `./run_docker.sh`
-3. Run in Kubernetes:  `./run_kubernetes.sh`
+  ```
+  ./run_docker.sh
+  ```
 
-### Kubernetes Steps
+  and then run
 
-* Setup and Configure Docker locally
-* Setup and Configure Kubernetes locally
-* Create Flask app in Container
-* Run via kubectl
+  ```
+   ./make_predictions.sh
+  ```
+
+  in a separate terminal. Check output in first terminal.
+
+## Summary of Repository files
+All files and can be found in the root folder of the [project-ml-microservice-kubernetes](https://github.com/mabichuks/project-ml-microservice-kubernetes) repository.
+
+- **requirements.txt** - This text file has a list of package dependencies for `app.py`
+- **Makefile** - This file contains instructions to setup, install, test and lint the program in a virtual environment
+- **run_docker.sh** - This script file creates a docker image. It contains instructions on the image name, tag etc.
+  - `docker build .` command builds the docker image using the Dockerfile. This process involves copying source code into a working directory, installing dependencies listed in requirements.txt file and exposing port 80 where the app is running.
+  - `docker run -p 8000:80 ` command runs the docker image and  exposes the app at port 8000. The script will build docker image using `--tag=mabi/udacity-docker-devops`.
+  - `docker image ls` lists the built images
+- **upload_docker.sh** - This script uploads docker image to [Dockerhub](https://hub.docker.com/) after authenticating your Dockerhub credentials.
+- **run_kubernetes.sh** - This script runs the docker image in a Kubernetes cluster.
+  - `kubectl run udacity-docker-devops  --image=$dockerpath --port=80 --labels app=udacity-docker-devops` command runs the docker image in a kubernetes pod
+  - `kubectl get pods` can be used to checks the state of all available pods.
+  - `kubectl port-forward udacity-docker-devops  8000:80` allows all application requests to be handled at port 8000.
+- `./make_prediction.sh` is used to send input data to docker image in kubernetes pod and receive house pricing predictions.
+- **.circleci/config.yml** - contains circleci config.yml script to automate `make install` and `make lint` using continuous integration with Github and continuous delivery with circleci
