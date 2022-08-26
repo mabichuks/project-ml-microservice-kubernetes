@@ -62,5 +62,5 @@ All files and can be found in the root folder of the [project-ml-microservice-ku
   - `kubectl run udacity-docker-devops  --image=$dockerpath --port=80 --labels app=udacity-docker-devops` command runs the docker image in a kubernetes pod
   - `kubectl get pods` can be used to checks the state of all available pods.
   - `kubectl port-forward udacity-docker-devops  8000:80` allows all application requests to be handled at port 8000.
-- `./make_prediction.sh` is used to send input data to docker image in kubernetes pod and receive house pricing predictions.
+- **./make_prediction.sh** is used to send input data to docker image in kubernetes pod and receive house pricing predictions.
 - **.circleci/config.yml** - contains circleci config.yml script to automate `make install` and `make lint` using continuous integration with Github and continuous delivery with circleci
